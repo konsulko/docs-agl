@@ -3,32 +3,55 @@
 To build the QEMU version of the AGL demo platform use machine **qemux86-64** and feature **agl-demo**:
 
 ```bash
-source meta-agl/scripts/aglsetup.sh -m qemux86-64 agl-demo
+source meta-agl/scripts/aglsetup.sh -f -m qemux86-64 agl-demo agl-devel
 bitbake agl-demo-platform
 ```
-
-TODO: configure and build SDK as well?
 
 By default, the build will produce a compressed *vmdk* image as *agl-demo-platform-qemux86-64.vmdk.xz*
 
 # Deploying the AGL Demo Platform for QEMU
 
-TODO: Windows tools
+## Prepare an image for boot
 
-In order to deploy the resulting *vmdk.xz* image, first decompress it:
+Decompress the *agl-demo-platform-qemux86-64.vmdk.xz* image to prepare it for boot.
+
+### Linux
+
 
 ```bash
 xz -d agl-demo-platform-qemux86-64.vmdk.xz
 ```
 
-## QEMU
+### Windows
 
-* TODO: where to get qemu-system-x86_64 on N Linux hosts
-* TODO: document broken qemu that cannot be used in the SDK
-* TODO: document runqemu from the build host?
+Download [7-Zip](http://www.7-zip.org/) and select *agl-demo-platform-qemux86-64.vmdk.xz* to be decompressed.
 
-Boot the *agl-demo-platform-qemux86-64.vmdk* image in qemu with kvm support.
+## Boot an image
 
+### QEMU
+
+#### Install qemu-system-x86_64 on host
+
+Note: if an AGL crosssdk has been created, it will contain a qemu binary for the host system. This SDK qemu binary has no graphics support and cannot currently be used to boot an AGL image.
+
+**Arch**
+```bash
+sudo pacman -S qemu
+```
+
+**Debian / Ubuntu**
+```bash
+sudo apt-get install qemu-system-x86
+```
+
+**Fedora**
+```bash
+sudo yum install qemu-kvm
+```
+
+#### Boot
+
+Boot the *agl-demo-platform-qemux86-64.vmdk* image in qemu with kvm support:
 ```bash
 qemu-system-x86_64 -enable-kvm -m 2048 \
 	-hda agl-demo-platform-qemux86-64.vmdk \
@@ -38,15 +61,18 @@ qemu-system-x86_64 -enable-kvm -m 2048 \
 	-serial mon:stdio -serial null \
 	-soundhw hda \
 	-net nic,vlan=0 \
-	-net user,hostfwd=tcp::$SSH_PORT-:22
+	-net user,hostfwd=tcp::2222-:22
 ```
 
-## VirtualBox
+### VirtualBox
 
-TODO: Document where to get VirtualBox
+#### Install
 
-Boot the *agl-demo-platform-qemux86-64.vmdk* image in VirtualBox.
+Download and install [VirtualBox](https://www.virtualbox.org/wiki/Downloads)
 
+#### Boot
+
+Boot the *agl-demo-platform-qemux86-64.vmdk* image in VirtualBox:
   * Start VirtualBox
   * Click *New* to create a new machine
     * Enter *AGL QEMU* as the Name
@@ -57,12 +83,15 @@ Boot the *agl-demo-platform-qemux86-64.vmdk* image in VirtualBox.
        * Navigate to and select the *agl-demo-platform-qemux86-64.vmdk* image
   * Ensure that the newly created *AGL QEMU* machine is highlighted and click *Start*
 
-## VMWare Player
+### VMWare Player
 
-TODO: Document where to get VMWare Player
+#### Install
 
-Boot the *agl-demo-platform-qemux86-64.vmdk* image in VMWare Player.
+Download and install [VMWare Player](https://www.vmware.com/products/player/playerpro-evaluation.html)
 
+#### Boot
+
+Boot the *agl-demo-platform-qemux86-64.vmdk* image in VMWare Player:
   * Start VMWare Player
   * Select *File* and *Create a New Virtual Machine*
     * Select *I will install the operating system later* and click *Next*
