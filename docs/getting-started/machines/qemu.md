@@ -31,7 +31,7 @@ Download [7-Zip](http://www.7-zip.org/) and select **agl-demo-platform-qemux86-6
 
 ### QEMU
 
-#### Install qemu-system-x86_64 on host
+#### Install
 
 Note: if an AGL crosssdk has been created, it will contain a qemu binary for the host system. This SDK qemu binary has no graphics support and cannot currently be used to boot an AGL image.
 
